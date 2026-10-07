@@ -1,0 +1,149 @@
+@import "tailwindcss";
+
+/* ============================================================
+ * perler-beads 2.0
+ * 纸感底色 + 陶土色品牌色（brand/accent 同源 #d97757）
+ * ============================================================ */
+
+:root {
+  --background: #faf9f5;
+  --foreground: #141413;
+
+  --accent: #d97757;
+  --accent-hover: #c4684a;
+  --accent-light: #e8a48c;
+  --accent-subtle: rgba(217, 119, 87, 0.08);
+  --accent-green: #788c5d;
+
+  /* 工作台氛围层（三色光斑 + 点阵） */
+  --workspace-bg: #f0efe8;
+  --workspace-dot: rgba(20, 20, 19, 0.06);
+  --workspace-orb-1: rgba(217, 119, 87, 0.28);
+  --workspace-orb-2: rgba(106, 155, 204, 0.24);
+  --workspace-orb-3: rgba(120, 140, 93, 0.22);
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    color-scheme: dark;
+    --background: #141413;
+    --foreground: #f3f1eb;
+
+    --workspace-bg: #171614;
+    --workspace-dot: rgba(250, 249, 245, 0.04);
+    --workspace-orb-1: rgba(217, 119, 87, 0.2);
+    --workspace-orb-2: rgba(106, 155, 204, 0.16);
+    --workspace-orb-3: rgba(120, 140, 93, 0.14);
+  }
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+
+  /* 品牌色阶（2.0 实际只用到 500/600 两档） */
+  --color-brand-500: #d97757;
+  --color-brand-600: #c4684a;
+  --color-accent: var(--accent);
+  --color-accent-hover: var(--accent-hover);
+  --color-accent-light: var(--accent-light);
+  --color-accent-subtle: var(--accent-subtle);
+  --color-accent-green: var(--accent-green);
+
+  --font-sans: var(--font-poppins), system-ui, sans-serif;
+  --font-mono: var(--font-geist-mono), ui-monospace, monospace;
+
+  /* 自定义动画（对应线上 keyframes） */
+  --animate-mode-fade-in: mode-fade-in 0.45s ease-out both;
+  --animate-welcome-mascot-in: welcome-mascot-in 0.6s cubic-bezier(0.34, 1.56, 0.64, 1) both;
+  --animate-welcome-content-in: welcome-content-in 0.7s ease-out both;
+  --animate-toolbar-slide-up: toolbar-slide-up 0.5s cubic-bezier(0.16, 1, 0.3, 1) both;
+  --animate-modal-backdrop-in: modal-backdrop-in 0.25s ease-out both;
+  --animate-modal-card-in: modal-card-in 0.35s cubic-bezier(0.16, 1, 0.3, 1) both;
+}
+
+@keyframes mode-fade-in {
+  0% { opacity: 0; transform: translateY(4px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes welcome-mascot-in {
+  0% { opacity: 0; transform: scale(0.92) rotate(-3deg); }
+  100% { opacity: 1; transform: scale(1) rotate(0deg); }
+}
+@keyframes welcome-content-in {
+  0% { opacity: 0; transform: translateY(8px); }
+  100% { opacity: 1; transform: translateY(0); }
+}
+@keyframes toolbar-slide-up {
+  0% { opacity: 0; transform: translate(-50%, 12px); }
+  100% { opacity: 1; transform: translate(-50%, 0); }
+}
+@keyframes modal-backdrop-in {
+  0% { opacity: 0; }
+  100% { opacity: 1; }
+}
+@keyframes modal-card-in {
+  0% { opacity: 0; transform: translateY(12px) scale(0.98); }
+  100% { opacity: 1; transform: translateY(0) scale(1); }
+}
+
+/* ============ 自定义工具类（自线上 CSS 逐字还原） ============ */
+
+html,
+body {
+  overscroll-behavior: none;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+}
+
+/* 毛玻璃面板（线上无标准 backdrop-filter，仅 -webkit- 前缀；此处两者都写以增强兼容） */
+.glass-light {
+  background-color: rgba(255, 255, 255, 0.55);
+  border: 1px solid rgba(255, 255, 255, 0.5);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8);
+  backdrop-filter: blur(24px) saturate(1.8);
+}
+
+.glass-dark {
+  background-color: rgba(30, 29, 27, 0.65);
+  border: 1px solid rgba(255, 255, 255, 0.12);
+  box-shadow: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
+  -webkit-backdrop-filter: blur(24px) saturate(1.8);
+  backdrop-filter: blur(24px) saturate(1.8);
+}
+
+/* 深色模式玻璃覆盖（逐字对齐线上编译 CSS） */
+@media (prefers-color-scheme: dark) {
+  .glass-light {
+    background-color: rgba(30, 29, 27, 0.5);
+    border-color: rgba(255, 255, 255, 0.1);
+  }
+
+  .glass-dark {
+    background-color: rgba(20, 20, 19, 0.7);
+  }
+}
+
+/* 工作台环境层：三色径向光斑 */
+.workspace-ambient {
+  background-color: var(--workspace-bg);
+  background-image:
+    radial-gradient(closest-side, var(--workspace-orb-1), transparent),
+    radial-gradient(closest-side, var(--workspace-orb-2), transparent),
+    radial-gradient(closest-side, var(--workspace-orb-3), transparent);
+  background-position:
+    right -220px top -320px,
+    -360px 35%,
+    right 25% bottom -360px;
+  background-repeat: no-repeat, no-repeat, no-repeat;
+  background-size: 1100px 1100px, 1000px 1000px, 1000px 1000px;
+}
+
+/* 工作台舞台层：点阵网格 */
+.workspace-stage {
+  background-image: radial-gradient(var(--workspace-dot) 1px, transparent 0);
+  background-size: 18px 18px;
+}
